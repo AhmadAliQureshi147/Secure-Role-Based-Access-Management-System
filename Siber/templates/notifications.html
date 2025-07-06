@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Notifications</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 40px; }
+    ul { padding: 0; }
+    li { margin-bottom: 10px; }
+    .top-right-buttons {
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 20px;
+    }
+    .top-right-buttons button {
+        padding: 10px 20px;
+        font-size: 16px;
+        border: none;
+        background-color: #4CAF50;
+        color: white;
+        cursor: pointer;
+        border-radius: 5px;
+        margin-left: 10px;
+    }
+    .top-right-buttons a {
+        text-decoration: none;
+        color: white;
+    }
+  </style>
+</head>
+<body>
+  <div class="top-right-buttons">
+    <button onclick="window.history.back()">Go Back</button>
+  </div>
+
+  <h1>Notifications</h1>
+  {% if notifications %}
+    <ul>
+      {% for notification in notifications %}
+        {% if "Threshold met" in notification %}
+          <li style="color: green;">{{ notification }}</li>
+        {% else %}
+          <li style="color: red;">{{ notification }}</li>
+        {% endif %}
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No notifications yet.</p>
+  {% endif %}
+</body>
+</html>

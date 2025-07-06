@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Records</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 40px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    table, th, td { border: 1px solid black; }
+    th, td { padding: 10px; text-align: left; }
+    form { margin-bottom: 20px; }
+  </style>
+</head>
+<body>
+  <h1>Records</h1>
+
+  <form action="{{ url_for('view_records') }}" method="GET">
+    <label for="date">Date:</label>
+    <input type="date" id="date" name="search_date" required>
+
+
+    <label for="time">Time:</label>
+    <input type="time" id="time" name="search_time" required>
+
+    <button type="submit">Search</button>
+  </form>
+
+  <h2>File Type Counts</h2>
+  <table>
+    <tr>
+      <th>File Type</th>
+      <th>Count</th>
+    </tr>
+    {% for file_type, count in file_counts.items() %}
+    <tr>
+      <td>{{ file_type }}</td>
+      <td>{{ count }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+
+  {% if search_date %}
+  <h2>Most Common File Types for {{ search_date }}</h2>
+  <table>
+    <tr>
+      <th>File Type</th>
+      <th>Count</th>
+    </tr>
+    {% for file_type, count in most_common_file_types %}
+    <tr>
+      <td>{{ file_type }}</td>
+      <td>{{ count }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+  {% endif %}
+</body>
+</html>

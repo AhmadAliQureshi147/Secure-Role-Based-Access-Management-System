@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>File Upload</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 40px; }
+    form { margin-bottom: 20px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    table, th, td { border: 1px solid black; }
+    th, td { padding: 10px; text-align: left; }
+    .search-container {
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 20px;
+    }
+    .search-container input[type="text"], .search-container input[type="date"], .search-container input[type="time"] {
+        padding: 5px;
+        font-size: 17px;
+        border: 1px solid grey;
+        border-radius: 5px;
+        margin-right: 10px;
+    }
+    .search-container select, .search-container button {
+        padding: 5px;
+        font-size: 17px;
+        border: 1px solid grey;
+        border-radius: 5px;
+    }
+    .top-right-buttons {
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 20px;
+    }
+    .top-right-buttons button {
+        padding: 10px 20px;
+        font-size: 16px;
+        border: none;
+        background-color: #4CAF50;
+        color: white;
+        cursor: pointer;
+        border-radius: 5px;
+        margin-left: 10px;
+    }
+    .top-right-buttons a {
+        text-decoration: none;
+        color: white;
+    }
+  </style>
+</head>
+<body>
+  <div class="top-right-buttons">
+    <button onclick="showNotifications()">Show Notifications</button>
+    <button><a href="/logs">View Logs</a></button>
+    <button><a href="/records">View Records</a></button>
+  </div>
+
+  <h1>Upload Files</h1>
+
+  <form action="/upload_url" method="post">
+    <input type="text" name="url_or_ip" placeholder="Enter URL or IP Address">
+    <input type="submit" value="Fetch and Upload">
+  </form>
+
+  <form action="/" method="post" enctype="multipart/form-data">
+    <input type="file" name="file" multiple>
+    <input type="submit" value="Upload">
+  </form>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <p style="color: red;">{{ message }}</p>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  <h2>Uploaded Files</h2>
+  <p>Number of files: {{ count }}</p>
+
+  <div class="search-container">
+    <form method="get" action="/">
+      <input type="text" name="query" placeholder="Search.." value="{{ query }}">
+      <input type="date" name="search_date" value="{{ search_date }}">
+      <input type="time" name="search_time" value="{{ search_time }}">
+      <select name="filter_by">
+        <option value="filename" {% if filter_by =='filename' %}selected{% endif %}>File Name</option>
+        <option value="file_type" {% if filter_by =='file_type' %}selected{% endif %}>File Type</option>
+        <option value="upload_date" {% if filter_by =='upload_date' %}selected{% endif %}>Upload Date</option>
+        <option value="upload_time" {% if filter_by =='upload_time' %}selected{% endif %}>Upload Time</option>
+      </select>
+      <select name="time_interval">
+        <option value="">All Time</option>
+        <option value="10m" {% if time_interval =='10m' %}selected{% endif %}>Last 10 Minutes</option>
+        <option value="30m" {% if time_interval =='30m' %}selected{% endif %}>Last 30 Minutes</option>
+        <option value="current_day" {% if time_interval =='current_day' %}selected{% endif %}>Today</option>
+      </select>
+      <button type="submit">Search</button>
+    </form>
+    <form method="post" action="/set_interval">
+      <select name="interval">
+        <option value="3 min">3 min</option>
+      </select>
+      <button type="submit">Synchronization</button>
+    </form>
+  </div>
+
+  {% if search_date %}
+  <h3>Search Results for {{ search_date }}{% if search_time %} at {{ search_time }}{% endif %}</h3>
+  <p>Number of files uploaded: {{ count }}</p>
+  <h4>Most Common File Types:</h4>
+  <ul>
+    {% for file_type, count in most_common_file_types %}
+      <li>{{ file_type }}: {{ count }}</li>
+    {% endfor %}
+  </ul>
+  <form method="get" action="/">
+    <input type="hidden" name="search_date" value="{{ search_date }}">
+    <select name="filter_by">
+      {% for file_type, count in most_common_file_types %}
+        <option value="{{ file_type }}">{{ file_type }}</option>
+      {% endfor %}
+    </select>
+    <button type="submit">Filter by File Type</button>
+  </form>
+  {% endif %}
+
+  <table>
+    <tr>
+      <th>File Name</th>
+      <th>File Type</th>
+      <th>Upload Date</th>
+      <th>Upload Time</th>
+    </tr>
+    {% for file in files %}
+      <tr>
+        <td>{{ file.filename }}</td>
+        <td>{{ file.file_type }}</td>
+        <td>{{ file.upload_date }}</td>
+        <td>{{ file.upload_time }}</td>
+      </tr>
+    {% endfor %}
+  </table>
+
+  <script>
+    function showNotifications() {
+      window.location.href = "/notifications";
+    }
+  </script>
+</body>
+</html>
+
