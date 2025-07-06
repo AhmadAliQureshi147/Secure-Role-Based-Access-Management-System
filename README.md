@@ -3,7 +3,7 @@
 
 ## 📌 Project Overview
 
-RBAMS is a secure, scalable, and role-based web application designed to manage users and permissions within an organization. Built with **ReactJS** for a dynamic frontend and **Flask + MySQL** for a robust backend, this system supports four user roles: **Superadmin, Admin, Employee, and User**. Sensitive data like passwords is encrypted using **AES (Advanced Encryption Standard)** to ensure data protection and security.
+SRBAMS is a secure, scalable, and role-based web application designed to manage users and permissions within an organization. Built with **ReactJS** for a dynamic frontend and **Flask + MySQL** for a robust backend, this system supports four user roles: **Superadmin, Admin, Employee, and User**. Sensitive data like passwords is encrypted using **AES (Advanced Encryption Standard)** to ensure data protection and security.
 
 ## 🚀 Features
 
